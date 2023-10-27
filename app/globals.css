@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240, 21%, 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240, 21%, 12%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 240, 21%, 12%;
+ 
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+ 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+ 
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 240, 21%, 12%;
+ 
+    --radius: 0.5rem;
+
+    --theme-accent: #f38ba8;
+  }
+ 
+  .dark {
+    --background: 240, 21%, 15%;
+    --foreground: 210 40% 98%;
+ 
+    --card: 240, 21%, 12%;
+    --card-foreground: 210 40% 98%;
+ 
+    --popover: 240, 21%, 12%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+ 
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+ 
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 240, 23%, 9%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  --sidebar-size: 225px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+html{
+  overflow: hidden;
+  border-radius: 25px;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: #1e1e2e;
+  overflow: auto;
+  display: flex;
+}
+
+
+.sidebar{
+  width: var(--sidebar-size);
+  background: #181825;
+  height: 100dvh;
+  position: relative;
+}
+
+.sidebar .header{
+  width: 100%;
+  height: 40px;
+  display: flex;
+  gap: 10px;
+  padding: 15px 10px;
+}
+
+.sidebar .header .buttons{
+  display: flex;
+  gap: 5px;
+}
+
+.sidebar .header .buttons > div {
+  width: 12px;
+  height: 12px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.sidebar .header .buttons .red{
+  background-color: #f38ba8;
+}
+
+.sidebar .header .buttons .yellow{
+  background-color: #f9e2af;
+}
+
+.sidebar .header .buttons .green{
+  background-color: #a6e3a1;
+}
+
+.sidebar .header .title {
+  font-size: 14px;
+  line-height: 12px;
+  font-weight: 700;
+}
+
+.headerbar {
+  height: 40px;
+  width: 100%;
+  background: #181825;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 20px;
+}
+
+.headerbar .icon {
+  width: 24px;
+}
+
+.searchbar{
+  height: 40px;
+  width: 100%;
+  display: flex;
+  gap: 5px;
+}
+
+.searchbar .icon{
+  margin-top: 10px;
+}
+
+.searchbar input{
+  background-color: transparent;
+  height: 100%;
+}
+
+.headerbar > .searchbar {
+  margin-top: -10px;
+}
+
+input:focus{
+  outline: 0;
+}
+
+body > main {
+  width: calc(100% - var(--sidebar-size));
+  height: 100dvh;
+  overflow: auto;
+  background-image: url(/icon.grey.svg);
+  background-size: 25% 25%;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+body > main > .main {
+  box-sizing: border-box;
+  padding: 20px;
+}
