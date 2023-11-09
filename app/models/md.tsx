@@ -21,6 +21,7 @@ export const CustomRenderers: Partial<Components> = {
 	},
 	code(props){
 		const {node, ...rest} = props;
-		return <SyntaxHighlighter language={rest.className?.split('-')[1]} style={dracula}>{rest.children}</SyntaxHighlighter>
+		let c = rest.children?.toString();
+		return <SyntaxHighlighter children={c as string} language={rest.className?.split('-')[1]} style={dracula}></SyntaxHighlighter>
 	}
 };
