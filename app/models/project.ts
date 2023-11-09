@@ -6,5 +6,6 @@ export interface Project {
 	git?: string,
 	url: string,
 	image?: string,
-	logo?: string
+	logo?: string,
+	description: string
 }

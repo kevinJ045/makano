@@ -1,0 +1,69 @@
+[
+  {
+    "description": "List files in the 'up' directory",
+    "path": "http://makano.rf.gd/index.php",
+    "method": "GET"
+  },
+  {
+    "description": "List files in a specific folder within the 'up' directory",
+    "path": "http://makano.rf.gd/index.php?folder=your-folder-name",
+    "method": "GET"
+  },
+  {
+    "description": "Create or Write a file",
+    "path": "http://makano.rf.gd/index.php",
+    "method": "POST",
+    "payload": {
+      "API_KEY": "your_api_key",
+      "action": "write",
+      "payload": {
+        "filename": "your-filename.txt",
+        "change": "create",
+        "type": "file",
+        "content": "File content goes here"
+      }
+    }
+  },
+  {
+    "description": "Read a file",
+    "path": "http://makano.rf.gd/index.php",
+    "method": "POST",
+    "payload": {
+      "API_KEY": "your_api_key",
+      "action": "read",
+      "payload": {
+        "filename": "your-filename.txt",
+        "change": "none",
+        "type": "file"
+      }
+    }
+  },
+  {
+    "description": "Delete a file",
+    "path": "http://makano.rf.gd/index.php",
+    "method": "POST",
+    "payload": {
+      "API_KEY": "your_api_key",
+      "action": "delete",
+      "payload": {
+        "filename": "your-filename.txt",
+        "change": "delete",
+        "type": "file"
+      }
+    }
+  },
+  {
+    "description": "Create or Write a folder",
+    "path": "http://makano.rf.gd/index.php",
+    "method": "POST",
+    "payload": {
+      "API_KEY": "your_api_key",
+      "action": "write",
+      "payload": {
+        "filename": "your-folder-name",
+        "change": "create",
+        "type": "folder"
+      }
+    }
+  }
+]
