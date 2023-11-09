@@ -49,7 +49,7 @@ export default function RootLayout({
               <div className="green"></div>
             </div>
 
-            <div className="title">Makano's Archive</div>
+            <div className="title">Makano&apos;s Archive</div>
 
             <MoreVertical className="cursor-pointer" size={12}/>
           </div>
