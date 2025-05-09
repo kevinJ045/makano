@@ -226,3 +226,7 @@ body > main > .main {
 .cryoli-logo{
   fill: #f38ba8;
 }
+
+.height-very-long{
+  height: 1000px;
+}

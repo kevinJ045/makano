@@ -7,7 +7,7 @@ import { DripBottom } from './components/drip-bottom';
 import XTermTerminal from './components/XTermTerminal';
 import { Terminal } from 'xterm';
 import { CryoliLogo } from './components/logo-cryoli';
-import AnimatedBall from './components/animated--ball';
+import Brush from './components/brush';
 
 
 export default function Home() {
@@ -24,13 +24,18 @@ export default function Home() {
   const y = useTransform(scrollYProgress, [0, 1], [0, -100]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
+  const [v, setV] = useState(false);
+
 
   return (
     <div
     className='w-screen h-screen'
     ref={containerRef}>
       <BlobPattern />
-      <AnimatedBall scrollYProgress={scrollYProgress} lineWidth={20} />
+      {/* <Brush onPointHit={() => {
+        setV(true)
+        alert('Hah')
+      }} scrollYProgress={scrollYProgress} lineWidth={20} /> */}
       <motion.div
         style={{ scale, y, opacity }}
         className="min-w-full min-h-screen flex p-3"
@@ -74,7 +79,9 @@ export default function Home() {
           </div>
         </div>
       </motion.div>
-      <div className="h-screen w-full">hello</div>
+      {Array(5).fill(0).map((_, i) => i)
+        .map((i) => <div className="height-very-long w-full">hello {i}</div>)}
+      
     </div>
   );
 }
