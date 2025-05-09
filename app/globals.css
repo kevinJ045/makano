@@ -192,7 +192,7 @@ body > main {
   width: calc(100% - var(--sidebar-size));
   height: 100dvh;
   overflow: auto;
-  background-image: url(/icon.grey.svg);
+  /* background-image: url(/icon.grey.svg); */
   background-size: 25% 25%;
   background-repeat: no-repeat;
   background-position: 50% 50%;
@@ -206,4 +206,23 @@ body > main > .main {
 .badge{
   font-size: 12px;
   font-weight: bolder;
+}
+
+.drip-wrapper {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  aspect-ratio: 2.09;
+  /* background-color: red; */
+}
+
+.drip-clip-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  fill: #181825dd;
+}
+
+.cryoli-logo{
+  fill: #f38ba8;
 }
