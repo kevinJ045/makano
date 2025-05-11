@@ -28,7 +28,7 @@ export const Commands = {
         const rows = Math.ceil(gridItems.length / 3);
         for (let i = 0; i < rows; i++) {
           const rowItems = gridItems.slice(i * 3, i * 3 + 3);
-          formattedItems += rowItems.join("    ") + "\n\r";
+          formattedItems += rowItems.join("    ") + "\n";
         }
 
         o.writeLine(...formattedItems.trim().split('\n'));

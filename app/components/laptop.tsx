@@ -83,7 +83,7 @@ export const pageData = [
 			}
 
 			ctx.fillStyle = 'white';
-			ctx.font = '80px monospace';
+			ctx.font = '20px monospace';
 
 			for (let i = 0; i < states.messages.length; i++) {
 				ctx.fillText(states.messages[i], canvasWidth * 0.1, states.textY + i * states.lineHeight);
@@ -107,8 +107,8 @@ export const pageData = [
 			ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
 			if (!isUpdate) {
-				states.textY = canvasHeight * 0.1;
-				states.lineHeight = 80;
+				states.textY = canvasHeight * 0.2;
+				states.lineHeight = 12;
 				states.history = [];
 				states.introDone = false;				
 				states.currentInput = '';
@@ -208,11 +208,11 @@ export const pageData = [
 			const totalHeight = totalLines * states.lineHeight;
 
 			// Determine vertical scroll offset if content exceeds canvas
-			const scrollOffset = Math.max(0, totalHeight - (canvasHeight / 3));
+			const scrollOffset = Math.max(0, totalHeight - (canvasHeight / 1.3));
 
 
 			ctx.fillStyle = '#ea999c';
-			ctx.font = '60px monospace';
+			ctx.font = '10px monospace';
 
 			for (let i = 0; i < states.history.length; i++) {
 				ctx.fillText(states.history[i].replaceAll(
@@ -230,201 +230,6 @@ export const pageData = [
 		title: "Linux-like Terminal",
 	}
 ];
-
-export const Laptop3D = ({ currentPage, onClick, setPage, rotating = false, rotation, mainEvents: events }: {
-	currentPage: number,
-	onClick: () => any,
-	setPage: (number: number) => any,
-	rotating?: boolean,
-	rotation?: number,
-	mainEvents: LaptopEvents
-}) => {
-	const laptopRef = useRef<any>();
-	const [openState, setOpenState] = useState(false);
-	const [screenMaterial, setScreenMaterial] = useState<any>(null);
-	const [animationMixer, setAnimationMixer] = useState<any>(null);
-
-	const updateFunction = useRef<any>();
-	const canvasRef = useRef<HTMLCanvasElement>();
-	const contextRef = useRef<any>();
-	const canvasTexture = useRef<any>();
-
-
-	const { nodes, animations } = useLoader(GLTFLoader, '/animated-laptop.glb');
-
-	const findByMaterial = (object: THREE.Object3D, name: string) => {
-		let screen = new THREE.Mesh();
-		object.traverse((obj) => {
-			let o: THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial> = obj as any;
-			if (o?.material?.name?.toLowerCase() === name) {
-				screen = o;
-			}
-		});
-		return screen;
-	}
-
-	const findScreen = (object: THREE.Object3D) => {
-		return findByMaterial(object, "screen");
-	}
-
-	useEffect(() => {
-		if(canvasRef.current) return;
-		const canvas = document.createElement('canvas');
-		// document.querySelector('#lll-1')?.appendChild(canvas);
-		canvas.width = 2048;
-		canvas.height = 2048;
-
-		nodes.Laptop.rotation.y = Math.PI / 3;
-		// nodes.Laptop.position.y = -0.1;
-
-		const colors = {
-			base: 0x181825,
-			lighter: 0x1e1e2e,
-			emissive: 0xcba6f7
-		};
-
-		const lightUnder = new THREE.PointLight(colors.emissive, 10, 5, 0);
-		lightUnder.position.set(0, 0, 0);
-		nodes.Laptop.add(lightUnder);
-
-
-		const lights = findByMaterial(nodes.Laptop, 'lights');
-		lights.material = new THREE.MeshStandardMaterial({
-			color: colors.emissive,
-			emissive: colors.emissive,
-			emissiveIntensity: 1,
-			side: 2
-		});
-
-		const lights_01 = findByMaterial(nodes.Laptop, "lights.001");
-		lights_01.material = lights.material;
-
-		const ceramic = findByMaterial(nodes.Laptop, 'ceramic');
-		ceramic.material = new THREE.MeshBasicMaterial({
-			color: colors.base,
-			side: 2
-		});
-
-		const touchpad = findByMaterial(nodes.Laptop, 'TOUCHPAD');
-		touchpad.material = new THREE.MeshBasicMaterial({
-			color: colors.lighter,
-			side: 2
-		});
-
-		const keys = findByMaterial(nodes.Laptop, 'keys');
-		keys.material = new THREE.MeshBasicMaterial({
-			color: colors.lighter,
-			side: 2
-		});
-
-		events.setPage = (num: number) => {
-			setPage(num);
-		}
-
-		const context = canvas.getContext('2d');
-		canvasRef.current = canvas;
-		contextRef.current = context;
-		canvasTexture.current = (new THREE.Texture(canvas));
-	}, []);
-
-	useEffect(() => {
-		if (nodes.Laptop && nodes.Laptop.children) {
-			const screenMat = new THREE.MeshBasicMaterial({
-				color: 0xffffff
-			});
-			if (screenMat) {
-				screenMat.map = canvasTexture.current || new THREE.Texture(canvasRef.current);
-				screenMat.map!.wrapS = THREE.RepeatWrapping;
-				screenMat.map!.wrapT = THREE.RepeatWrapping;
-				screenMat.map!.rotation = -Math.PI / 2;
-				screenMat.map!.repeat.set(1, -1);
-				setScreenMaterial(screenMat);
-				screenMat.needsUpdate = true;
-			}
-			findScreen(nodes.Laptop).material = screenMat;
-		}
-	}, [canvasTexture]);
-
-	useEffect(() => {
-
-		const canvas = canvasRef.current;
-		const context = contextRef.current;
-		let states = {};
-
-		const drawContent = () => {
-			updateFunction.current = (null);
-			events!.removeAll();
-			states = {};
-
-			context.clearRect(0, 0, canvas!.width, canvas!.height);
-			const pageContent = pageData[currentPage];
-			if (pageContent && pageContent.screen) {
-				let repeating = pageContent.screen(context, false, 0, states, events);
-				if (repeating === true) updateFunction.current = (delta: number) => {
-					pageContent.screen(context, true, delta, states, events);
-					canvasTexture.current.needsUpdate = true;
-					(findScreen(nodes.Laptop).material as any).needsUpdate = true;
-				};
-				else {
-					updateFunction.current = (null);
-					events!.removeAll();
-				}
-			}
-			(findScreen(nodes.Laptop).material as any).needsUpdate = true;
-			canvasTexture.current.needsUpdate = true;
-		};
-
-		if (canvas && context) drawContent();
-	}, [currentPage]);
-
-
-
-	useFrame((state: any, delta: number) => {
-		if (typeof updateFunction.current == "function") {
-			updateFunction.current(delta);
-		}
-	});
-
-	return (
-		<group ref={laptopRef} castShadow>
-			<directionalLight lookAt={() => laptopRef.current} intensity={1} />
-			<directionalLight position={[-3, 2, -3]} lookAt={() => laptopRef.current} intensity={1} />
-			<directionalLight position={[-3, 10, -3]} lookAt={() => laptopRef.current} intensity={1} />
-			<directionalLight position={[3, 10, 3]} lookAt={() => laptopRef.current} intensity={1} />
-			<ambientLight color={'#ffffff'} intensity={1} />
-
-			<primitive object={nodes.Laptop} />
-		</group>
-	);
-};
-
-export const LaptopCanvas1 = ({ currentPage, onClick, setPage, rotating = false, rotation, events }: {
-	currentPage: number,
-	onClick?: () => any,
-	setPage: (number: number | any) => any,
-	rotating?: boolean,
-	rotation?: number,
-	events?: LaptopEvents
-}) => {
-
-	return <Canvas
-		style={{
-			width: '300px',
-			height: '200px',
-		}}
-		camera={{
-			position: [-4, 3, 4],
-			fov: 22.5,
-		}}
-		gl={{ alpha: true }}>
-
-
-		<group position={[0, -0.25, 0]}>
-			<Laptop3D mainEvents={events || new LaptopEvents()} rotating={rotating} rotation={rotation} setPage={setPage} onClick={onClick || (() => setPage((prev: number) => (prev + 1) % pageData.length))} currentPage={currentPage} />
-		</group>
-
-	</Canvas>
-}
 
 export const LaptopCanvas = ({ currentPage, onClick, setPage, rotating = false, rotation, events }: {
 	currentPage: number,
