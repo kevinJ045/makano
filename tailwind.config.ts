@@ -73,6 +73,10 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@catppuccin/tailwindcss")({
+    prefix: "ctp",
+    defaultFlavour: "mocha",
+  }),
+],
 }
 export default config

@@ -1,18 +1,16 @@
 'use client';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef, useState } from 'react';
-import { Laptop3D, LaptopCanvas } from "./components/laptop";
 import BlobPattern from './components/blobs';
-import { DripBottom } from './components/drip-bottom';
-import XTermTerminal from './components/XTermTerminal';
-import { Terminal } from 'xterm';
-import { CryoliLogo } from './components/logo-cryoli';
-import Brush from './components/brush';
+import MainSection from './components/sections/main-section';
+import { BackgroundBeams } from '@/components/ui/background-beams';
+import ScrollTrailSVG from './components/brush';
+import Archive from './archive/layout';
+import PerformanceIntensive from './components/performance';
+import CubesScene from './components/cubes';
 
 
 export default function Home() {
-  const [laptopPage, setLaptopPage] = useState(1);
-  const [term, setTerm] = useState<null | Terminal>();
 
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -20,68 +18,38 @@ export default function Home() {
     offset: ["start start", "end start"]
   });
 
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.01]);
-  const y = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-
-  const [v, setV] = useState(false);
-
-
   return (
     <div
     className='w-screen h-screen'
     ref={containerRef}>
-      <BlobPattern />
-      {/* <Brush onPointHit={() => {
-        setV(true)
+      {/* <PerformanceIntensive minFPS={10}> */}
+        <BlobPattern />
+        <BackgroundBeams />
+      {/* </PerformanceIntensive> */}
+      {/* <ScrollTrailSVG onPointHit={() => {
         alert('Hah')
       }} scrollYProgress={scrollYProgress} lineWidth={20} /> */}
-      <motion.div
-        style={{ scale, y, opacity }}
-        className="min-w-full min-h-screen flex p-3"
-      >
-        <div className='w-[40%] relative rounded-t-3xl z-10 h-[75dvh] bg-[#181825] bg-opacity-90'>
-          <LaptopCanvas
-            setPage={setLaptopPage}
-            currentPage={laptopPage}
-            rotation={Math.PI / 4}
-            onClick={() => { }}
-            events={{
-              "terminal:write_lines": (lines: string[]) => {
-                lines.forEach(line => term?.writeln(line));
-              },
-              "terminal:set_input": (input: string) => {
-                term?.write('\x1b[2K\r');
-                term?.write(input);
-              },
-              "terminal:line_break": (input: string) => {
-                term?.write('\n\r');
-              },
-              "terminal:clear": (input: string) => {
-                term?.reset();
-              }
-            }} />
-          <DripBottom />
+      <MainSection scrollYProgress={scrollYProgress} />
+
+      <div className="w-full h-full p-10 grid grid-cols-1 md:grid-cols-3  max-w-7xl mx-auto gap-4 relative">
+        <div>
+          <h1 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-ctp-subtext0 to-ctp-subtext1 bg-opacity-50">
+            About Maki-Kun
+          </h1>
+          <p className="mt-4 font-normal text-base text-neutral-300 max-w-lg text-center mx-auto">
+            A subtle yet effective spotlight effect, because the previous version
+            is used a bit too much these days.
+          </p>
         </div>
-        <div className='w-[60%] flex relative pr-10 pt-10 gap-5 justify-end z-10'>
-          <div className="items w-[30%] flex justify-between mt-10 flex-col h-96">
-            <div className="w-24 h-24 bg-[#181825] rounded-3xl"></div>
-            <div className="w-24 h-24 bg-[#181825] flex items-center justify-center -ml-12 rounded-3xl">
-              <CryoliLogo className='w-12' />
-            </div>
-            <div className="w-24 h-24 bg-[#181825] rounded-3xl"></div>
-          </div>
-          <div className="terminal-output relative bg-[#181825] bg-opacity-90 rounded-t-3xl h-96 w-[50%]">
-            <div className="p-4">
-              <XTermTerminal onInit={(term) => { setTerm(term); }} />
-            </div>
-            <DripBottom />
-          </div>
+
+        <div className="magic-card relative w-96 h-96">
+          {/* <CubesScene /> */}
         </div>
-      </motion.div>
+      </div>
+
+      <div id="lll-1"></div>
       {Array(5).fill(0).map((_, i) => i)
-        .map((i) => <div className="height-very-long w-full">hello {i}</div>)}
-      
+        .map((i) => <div key={i} className="height-very-long w-full">hello {i}</div>)}
     </div>
   );
 }

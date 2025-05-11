@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MotionValue, useMotionValueEvent, motion, useSpring } from "framer-motion";
+import { MotionValue, useMotionValueEvent, motion, useSpring } from "motion/react";
 
 interface TrailProps {
   scrollYProgress: MotionValue<number>;
@@ -90,6 +90,7 @@ const ScrollTrailSVG = ({ scrollYProgress, lineWidth = 6, onPointHit }: TrailPro
       const h = window.innerHeight;
       const resolved = resolvePercentPoints(predefinedPathRaw, w, h);
       setPathPoints(fillMissingPoints(resolved, 1));
+      // setPathPoints(resolved);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -97,8 +98,8 @@ const ScrollTrailSVG = ({ scrollYProgress, lineWidth = 6, onPointHit }: TrailPro
   }, []);
 
   const smoothProgress = useSpring(scrollYProgress, {
-    // stiffness: 10,
-    // damping: 15,
+    stiffness: 10,
+    damping: 15,
     // bounce: 10
     velocity: 0.01
   });

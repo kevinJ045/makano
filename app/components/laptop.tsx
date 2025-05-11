@@ -1,10 +1,48 @@
 import React, { useEffect, useRef, useState } from 'react';
-// @ts-ignore
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as THREE from 'three';
 import { randInt } from 'three/src/math/MathUtils.js';
 import { OrbitControls } from '@react-three/drei';
+import { execCommand, existsCommand } from '../context/commands';
+
+
+const ANSI_REGEX = /\x1b\[[0-9;]*m/;
+const e: Record<string, any[]> = {};
+const l: Record<string, Record<string, (...data: any[]) => void>> = {};
+export class LaptopEvents {
+	id = 0;
+	_events: any[] = [];
+	listeners?: Record<string, (...data: any[]) => void>;
+	setPage: (num: number) => void = (num: number) => {};
+
+	constructor(listeners?: Record<string, () => void>, id?: number){
+		this.id = id || Object.keys(e).length;
+		if(listeners) l[this.id] = listeners;
+
+		e[this.id] = [];
+	}
+
+	removeAll(){
+		e[this.id].forEach(({ event, callback }: { event: string, callback: (...args: any[]) => any }) => {
+			document.removeEventListener(event, callback);
+		});
+	}
+	on(event: string, callback: (...args: any[]) => any){
+		document.addEventListener(event, callback);
+		e[this.id].push({ event, callback });
+	}
+	call(name: string, ...data: any[]){
+		e[this.id]
+		.filter(({ event }) => event == name)
+		.map(({ callback }) => callback(...data))
+	}
+	emit (event: string, ...data: any[]) {
+		if(l[this.id]?.[event]){
+			l[this.id][event](...data);
+		}
+	}
+}
 
 export const pageData = [
 	{
@@ -65,18 +103,27 @@ export const pageData = [
 			const canvasWidth = ctx.canvas.width;
 			const canvasHeight = ctx.canvas.height;
 
-			ctx.fillStyle = 'black';
+			ctx.fillStyle = '#11111e';
 			ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
 			if (!isUpdate) {
 				states.textY = canvasHeight * 0.1;
-				states.lineHeight = 100;
+				states.lineHeight = 80;
 				states.history = [];
+				states.introDone = false;				
 				states.currentInput = '';
 				states.prompt = '$ ';
+				states.introText = '\x1b[1;31mHello\x1b[1;32m\nHii\x1b[1;33m\nMan\x1b[0m';
+				states.currentIntroIndex = 0;
+				states._frame = 0;
 				states.writeLine = (...lines: string[]) => {
 					states.history.push(...lines);
 					events.emit('terminal:write_lines', lines);
+				}
+				states.write = (...lines: string[]) => {
+					if(!states.history.length) states.history.push('');
+					states.history[states.history.length -1] += lines.join('');
+					events.emit('terminal:write', lines);
 				}
 				states.updateLine = (index: number, line: string) => {
 					states.history[index] = line;
@@ -101,30 +148,13 @@ export const pageData = [
 					if (key === 'Enter') {
 						states.lineBreak();
 						const command = states.currentInput.trim();
-						const folders = [
-							"bin  boot dev etc",
-							"home lib  opt temp",
-							"root run  sys proc",
-							"usr  var"
-						];
-						const commands = ["bash", "dd", "rm", "mkdir", "touch", "cp", "cd"];
-						if (command) {
-							states.history.push(states.prompt + command);
-							if (command === 'help') {
-								states.writeLine('Available commands: help, clear, ls, echo <message>');
-							} else if (command === 'clear') {
-								states.clear();
-							} else if (command.startsWith('echo ')) {
-								const message = command.slice(5);
-								states.writeLine(message);
-							} else if (commands.includes(command.split(' ')[0])) {
-							} else if (command.startsWith('ls')) {
-								const message = command.slice(2);
-								if (message && message.trim() !== '/') states.writeLine(folders.join(' ').match(message.trim()) ? `"${message.trim()}": Permission denied (os error 13)` : `"${message.trim()}": No such file or directory (os error 2)`);
-								else states.writeLine(...folders);
-							} else {
-								states.writeLine(`bash: ${command}: command not found`);
-							}
+						states.history.push(states.prompt + command);
+						const commandParts = command.split(' ');
+						const commandName = commandParts.shift();
+						if(existsCommand(commandName)){
+							execCommand(commandName, commandParts, states);
+						} else {
+							states.writeLine(`bash: ${commandName}: command not found`);
 						}
 						states.setInput('');
 					} else if (key === 'Backspace') {
@@ -135,28 +165,63 @@ export const pageData = [
 				}
 
 				events.on('keydown', (event: any) => {
-					event.preventDefault();
-					const key = event.key;
-					states.updateWith(key)
+					if(states.introDone) {
+						event.preventDefault();
+						const key = event.key;
+						states.updateWith(key)
+					}
 				});
 
 			} else {
+				if(!states.introDone){
+					if(states.currentIntroIndex >= states.introText.length){
+						states.introDone = true;
+						states.writeLine('');
+						states.history = [];
+						states.setInput('');
+					} else {
+						states._frame++;
+						if(states._frame >= 5){
+							states._frame = 0;
 
+							const remainingText = states.introText.slice(states.currentIntroIndex);
+
+							const match = remainingText.match(ANSI_REGEX);
+							if (match && match.index === 0) {
+								states.write(match[0]);
+								states.currentIntroIndex += match[0].length;
+							} else {
+								const char = states.introText[states.currentIntroIndex];
+								if (char === '\n') {
+									states.writeLine('');
+								} else {
+									states.write(char);
+								}
+								states.currentIntroIndex += 1;
+							}
+						}
+					}
+				}
 			}
 
-			ctx.fillStyle = '#48ff22';
-			ctx.font = '80px monospace';
+			const totalLines = states.history.length;
+			const totalHeight = totalLines * states.lineHeight;
+
+			// Determine vertical scroll offset if content exceeds canvas
+			const scrollOffset = Math.max(0, totalHeight - (canvasHeight / 3));
+
+
+			ctx.fillStyle = '#ea999c';
+			ctx.font = '60px monospace';
 
 			for (let i = 0; i < states.history.length; i++) {
-				ctx.fillText(states.history[i], canvasWidth * 0.1, states.textY + i * states.lineHeight);
+				ctx.fillText(states.history[i].replaceAll(
+					new RegExp(ANSI_REGEX.source, 'g'), ''), canvasWidth * 0.1, states.textY + i * states.lineHeight - scrollOffset);
 			}
 
-			ctx.fillText(states.prompt + states.currentInput, canvasWidth * 0.1, states.textY + states.history.length * states.lineHeight);
-
-			const cursorX = canvasWidth * 0.1 + ctx.measureText(states.prompt + states.currentInput).width;
-			const cursorY = states.textY + states.history.length * states.lineHeight - 18;
-			ctx.fillRect(cursorX, cursorY, 2, 20);
-
+			if(states.introDone)
+				ctx.fillText(states.prompt + states.currentInput, canvasWidth * 0.1, states.textY + states.history.length * states.lineHeight - scrollOffset);
+		
 			return true;
 		},
 		content: () => {
@@ -166,13 +231,13 @@ export const pageData = [
 	}
 ];
 
-export const Laptop3D = ({ currentPage, onClick, setPage, rotating = false, rotation, events: _events = {} }: {
+export const Laptop3D = ({ currentPage, onClick, setPage, rotating = false, rotation, mainEvents: events }: {
 	currentPage: number,
 	onClick: () => any,
 	setPage: (number: number) => any,
 	rotating?: boolean,
 	rotation?: number,
-	events?: Record<string, (...data: any[]) => any>
+	mainEvents: LaptopEvents
 }) => {
 	const laptopRef = useRef<any>();
 	const [openState, setOpenState] = useState(false);
@@ -183,11 +248,9 @@ export const Laptop3D = ({ currentPage, onClick, setPage, rotating = false, rota
 	const canvasRef = useRef<HTMLCanvasElement>();
 	const contextRef = useRef<any>();
 	const canvasTexture = useRef<any>();
-	const events = useRef<Record<string, any>>();
-	const rotationDelta = useRef(0);
 
 
-	const { nodes, animations } = useLoader(GLTFLoader, '/laptop-mini-quality-open-close.glb');
+	const { nodes, animations } = useLoader(GLTFLoader, '/animated-laptop.glb');
 
 	const findByMaterial = (object: THREE.Object3D, name: string) => {
 		let screen = new THREE.Mesh();
@@ -205,13 +268,14 @@ export const Laptop3D = ({ currentPage, onClick, setPage, rotating = false, rota
 	}
 
 	useEffect(() => {
+		if(canvasRef.current) return;
 		const canvas = document.createElement('canvas');
+		// document.querySelector('#lll-1')?.appendChild(canvas);
 		canvas.width = 2048;
 		canvas.height = 2048;
-		// console.log(nodes);
 
-		nodes.Laptop.rotation.y = rotation || Math.PI / 4;
-		nodes.Laptop.position.y = -0.1;
+		nodes.Laptop.rotation.y = Math.PI / 3;
+		// nodes.Laptop.position.y = -0.1;
 
 		const colors = {
 			base: 0x181825,
@@ -253,82 +317,15 @@ export const Laptop3D = ({ currentPage, onClick, setPage, rotating = false, rota
 			side: 2
 		});
 
-		// nodes.Laptop.
-
-		// window.addEventListener('wheel', (event) => {
-		//     // Capture the scroll delta
-		//     rotationDelta.current += event.deltaY;
-		//     nodes.Laptop.rotation.y = rotationDelta.current * 0.001; // Scale down the delta
-		// });
-
-		events.current = {
-			_events: [],
-			removeAll: () => {
-				events.current!._events.forEach(({ event, callback }: { event: string, callback: (...args: any[]) => any }) => {
-					document.removeEventListener(event, callback);
-				});
-			},
-			on: (event: string, callback: (...args: any[]) => any) => {
-				document.addEventListener(event, callback);
-				events.current!._events.push({ event, callback });
-			},
-			emit: (event: string, ...data: any[]) => {
-				if(_events?.[event]){
-					_events[event](...data);
-				}
-			},
-			setPage: (num: number) => {
-				setPage(num);
-			}
-		};
-
-		// document.addEventListener('keydown', (event) => {
-		//     if(!events.current.keys.includes(event.key)) events.current.keys.push(event.key);
-		//     events.current.key = event.key;
-		// });
-		// document.addEventListener('keyup', (event) => {
-		//     let found = events.current.keys.indexOf(event.key);
-		//     events.current.keys = events.current.keys.filter(e => e !== event.key);
-		//     events.current.key = null;
-		// });
+		events.setPage = (num: number) => {
+			setPage(num);
+		}
 
 		const context = canvas.getContext('2d');
 		canvasRef.current = canvas;
 		contextRef.current = context;
 		canvasTexture.current = (new THREE.Texture(canvas));
 	}, []);
-
-	useEffect(() => {
-
-		const canvas = canvasRef.current;
-		const context = contextRef.current;
-		let states = {};
-
-		const drawContent = () => {
-			updateFunction.current = (null);
-			events.current!.removeAll();
-			states = {};
-
-			context.clearRect(0, 0, canvas!.width, canvas!.height);
-			const pageContent = pageData[currentPage];
-			if (pageContent && pageContent.screen) {
-				let repeating = pageContent.screen(context, false, 0, states, events.current);
-				if (repeating === true) updateFunction.current = (delta: number) => {
-					pageContent.screen(context, true, delta, states, events.current);
-					canvasTexture.current.needsUpdate = true;
-					(findScreen(nodes.Laptop).material as any).needsUpdate = true;
-				};
-				else {
-					updateFunction.current = (null);
-					events.current!.removeAll();
-				}
-			}
-			(findScreen(nodes.Laptop).material as any).needsUpdate = true;
-			canvasTexture.current.needsUpdate = true;
-		};
-
-		if (canvas && context) drawContent();
-	}, [currentPage]);
 
 	useEffect(() => {
 		if (nodes.Laptop && nodes.Laptop.children) {
@@ -342,61 +339,92 @@ export const Laptop3D = ({ currentPage, onClick, setPage, rotating = false, rota
 				screenMat.map!.rotation = -Math.PI / 2;
 				screenMat.map!.repeat.set(1, -1);
 				setScreenMaterial(screenMat);
-				screenMat.needsUpdate = true; // Ensure the material is updated
+				screenMat.needsUpdate = true;
 			}
 			findScreen(nodes.Laptop).material = screenMat;
 		}
-	}, [canvasTexture, nodes]);
+	}, [canvasTexture]);
 
 	useEffect(() => {
-		// const mixer = new THREE.AnimationMixer(laptopRef.current);
-		// setAnimationMixer(mixer);
 
-		// // Handle animation
-		// if (animations.length) {
-		//     const action = mixer.clipAction(findAnimation('LidOpening')); // Assuming first animation is for opening/closing
-		//     action.play();
-		// }
+		const canvas = canvasRef.current;
+		const context = contextRef.current;
+		let states = {};
 
-		// return () => {
-		//     if (mixer) mixer.stopAllAction();
-		// };
-	}, [laptopRef]);
+		const drawContent = () => {
+			updateFunction.current = (null);
+			events!.removeAll();
+			states = {};
 
-	const toggleLid = () => {
-		if (openState) {
-			// Lid Closing
-			setOpenState(false);
-			// animationMixer.clipAction(findAnimation("OpenLid")).play(); // Assuming CloseLid is the second animation
-		} else {
-			// Lid Opening
-			setOpenState(true);
-			// animationMixer.clipAction(findAnimation("CloseLid")).play(); // Assuming OpenLid is the third animation
-		}
-		onClick();
-	};
+			context.clearRect(0, 0, canvas!.width, canvas!.height);
+			const pageContent = pageData[currentPage];
+			if (pageContent && pageContent.screen) {
+				let repeating = pageContent.screen(context, false, 0, states, events);
+				if (repeating === true) updateFunction.current = (delta: number) => {
+					pageContent.screen(context, true, delta, states, events);
+					canvasTexture.current.needsUpdate = true;
+					(findScreen(nodes.Laptop).material as any).needsUpdate = true;
+				};
+				else {
+					updateFunction.current = (null);
+					events!.removeAll();
+				}
+			}
+			(findScreen(nodes.Laptop).material as any).needsUpdate = true;
+			canvasTexture.current.needsUpdate = true;
+		};
+
+		if (canvas && context) drawContent();
+	}, [currentPage]);
+
+
 
 	useFrame((state: any, delta: number) => {
-		if (animationMixer) animationMixer.update(delta);
 		if (typeof updateFunction.current == "function") {
 			updateFunction.current(delta);
-		}
-		if (rotating) {
-			nodes.Laptop.rotation.y += 0.01;
 		}
 	});
 
 	return (
-		<group ref={laptopRef} onClick={toggleLid} castShadow>
+		<group ref={laptopRef} castShadow>
 			<directionalLight lookAt={() => laptopRef.current} intensity={1} />
 			<directionalLight position={[-3, 2, -3]} lookAt={() => laptopRef.current} intensity={1} />
 			<directionalLight position={[-3, 10, -3]} lookAt={() => laptopRef.current} intensity={1} />
 			<directionalLight position={[3, 10, 3]} lookAt={() => laptopRef.current} intensity={1} />
 			<ambientLight color={'#ffffff'} intensity={1} />
+
 			<primitive object={nodes.Laptop} />
 		</group>
 	);
 };
+
+export const LaptopCanvas1 = ({ currentPage, onClick, setPage, rotating = false, rotation, events }: {
+	currentPage: number,
+	onClick?: () => any,
+	setPage: (number: number | any) => any,
+	rotating?: boolean,
+	rotation?: number,
+	events?: LaptopEvents
+}) => {
+
+	return <Canvas
+		style={{
+			width: '300px',
+			height: '200px',
+		}}
+		camera={{
+			position: [-4, 3, 4],
+			fov: 22.5,
+		}}
+		gl={{ alpha: true }}>
+
+
+		<group position={[0, -0.25, 0]}>
+			<Laptop3D mainEvents={events || new LaptopEvents()} rotating={rotating} rotation={rotation} setPage={setPage} onClick={onClick || (() => setPage((prev: number) => (prev + 1) % pageData.length))} currentPage={currentPage} />
+		</group>
+
+	</Canvas>
+}
 
 export const LaptopCanvas = ({ currentPage, onClick, setPage, rotating = false, rotation, events }: {
 	currentPage: number,
@@ -404,23 +432,72 @@ export const LaptopCanvas = ({ currentPage, onClick, setPage, rotating = false, 
 	setPage: (number: number | any) => any,
 	rotating?: boolean,
 	rotation?: number,
-	events?: any
+	events?: LaptopEvents
 }) => {
-	return <Canvas
-		style={{
-			width: '300px',
-			height: '300px',
-		}}
-		camera={{
-			position: [-4, 2, 4],
-			fov: 35,
-		}}
-		gl={{ alpha: true }}>
 
 
-		<group>
-			<Laptop3D rotating={rotating} rotation={rotation} setPage={setPage} onClick={onClick || (() => setPage((prev: number) => (prev + 1) % pageData.length))} currentPage={currentPage} events={events} />
-		</group>
+	const updateFunction = useRef<any>();
+	const canvasRef = useRef<any>();
+	const contextRef = useRef<any>();
 
-	</Canvas>
+	useEffect(() => {
+		if(!events) return;
+		const canvas = canvasRef.current;
+		const context = canvas.getContext('2d');
+		let states = {};
+
+		// if(canvas){
+		// 	canvas.width = 2048;
+		// 	canvas.height = 2048;
+		// }
+
+		events!.setPage = (num: number) => {
+			setPage(num);
+		}
+
+		const drawContent = () => {
+			updateFunction.current = (null);
+			events!.removeAll();
+			states = {};
+
+			context.clearRect(0, 0, canvas!.width, canvas!.height);
+			const pageContent = pageData[currentPage];
+			if (pageContent && pageContent.screen) {
+				let repeating = pageContent.screen(context, false, 0, states, events);
+				if (repeating === true) updateFunction.current = (delta: number) => {
+					pageContent.screen(context, true, delta, states, events);
+				};
+				else {
+					updateFunction.current = (null);
+					events!.removeAll();
+				}
+			}
+		};
+
+		if (canvas && context) drawContent();
+	}, [currentPage, events]);
+	
+	useEffect(() => {
+		function frame(){
+			if (typeof updateFunction.current == "function") {
+				updateFunction.current(Date.now());
+			}
+			requestAnimationFrame(frame);
+		}
+		requestAnimationFrame(frame);
+	}, []);
+
+	return <div className="w-[300px] relative h-[300px]">
+		<div className="laptop3d">
+			<div className="base"><div className="front"></div></div>
+			<div className="lid">
+				<div className="back"></div>
+				<div className="front">
+					<div className="screen">
+						<canvas className='w-full h-full' ref={canvasRef}></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 }
