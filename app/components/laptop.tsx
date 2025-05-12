@@ -1,9 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import * as THREE from 'three';
-import { randInt } from 'three/src/math/MathUtils.js';
-import { OrbitControls } from '@react-three/drei';
 import { execCommand, existsCommand } from '../context/commands';
 
 
