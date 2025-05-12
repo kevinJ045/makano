@@ -12,8 +12,7 @@ import { RiFileZipLine } from "react-icons/ri";
 import { LuPaintbrush } from "react-icons/lu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CardHeader } from "@/components/ui/card";
-import Link from "next/link";
-import { Github, Instagram, Linkedin, Twitter } from "lucide-react";
+import SocialIcons from "../items/social-icons";
 
 export default function MainSection({ scrollYProgress }: {
   scrollYProgress: MotionValue<number>
@@ -70,24 +69,7 @@ export default function MainSection({ scrollYProgress }: {
               icon={<LuPaintbrush size={22} />}
               title="Arts"></SlateNavItem>
           </div>
-          <div className="flex justify-center gap-4">
-            <Link href="#" className="text-ctp-red hover:text-ctp-blue transition-colors">
-              <Twitter className="h-5 w-5" />
-              <span className="sr-only">Twitter</span>
-            </Link>
-            <Link href="#" className="text-ctp-red hover:text-ctp-blue transition-colors">
-              <Github className="h-5 w-5" />
-              <span className="sr-only">GitHub</span>
-            </Link>
-            <Link href="#" className="text-ctp-red hover:text-ctp-blue transition-colors">
-              <Linkedin className="h-5 w-5" />
-              <span className="sr-only">LinkedIn</span>
-            </Link>
-            <Link href="#" className="text-ctp-red hover:text-ctp-blue transition-colors">
-              <Instagram className="h-5 w-5" />
-              <span className="sr-only">Instagram</span>
-            </Link>
-          </div>
+          <SocialIcons />
         </div>
         <DripBottom />
       </div>
