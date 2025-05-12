@@ -26,7 +26,7 @@ export default function Home() {
       className='w-screen h-screen'
       ref={containerRef}>
       {/* <PerformanceIntensive minFPS={10}> */}
-      {/* <BlobPattern /> */}
+      <BlobPattern />
       <BackgroundBeams />
       {/* </PerformanceIntensive> */}
       {/* <ScrollTrailSVG onPointHit={() => {
