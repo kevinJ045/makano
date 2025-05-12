@@ -4,7 +4,6 @@ import { Terminal } from "xterm";
 import { LaptopCanvas, LaptopEvents } from "../laptop";
 import { DripBottom } from "../drip-bottom";
 import { CryoliLogo } from "../logo-cryoli";
-import XTermTerminal, { useTerminalEvents } from "../XTermTerminal";
 import { SlateNavItem } from "../items/slate-nav-item";
 import { GiCubes } from "react-icons/gi";
 import { FaPenNib } from "react-icons/fa";
@@ -13,6 +12,11 @@ import { LuPaintbrush } from "react-icons/lu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CardHeader } from "@/components/ui/card";
 import SocialIcons from "../items/social-icons";
+import dynamic from "next/dynamic";
+import { useTerminalEvents } from "@/app/controllers/terminal";
+const XTermTerminal = dynamic(() => import('../XTermTerminal'), {
+  ssr: false,
+});
 
 export default function MainSection({ scrollYProgress }: {
   scrollYProgress: MotionValue<number>
