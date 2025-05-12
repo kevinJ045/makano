@@ -56,7 +56,7 @@ export default function MainSection({ scrollYProgress }: {
               </div>
             </CardHeader>
           </div>
-          <div className="flex flex-wrap slate-nav-group">
+          <div className="flex flex-wrap slate-nav-group" onClick={() => alert('Coming soon')}>
             <SlateNavItem
               icon={<GiCubes size={22} />}
               title="Maki-Labs"></SlateNavItem>
