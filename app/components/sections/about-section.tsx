@@ -159,12 +159,14 @@ export default function AboutSection() {
               {
                 name: "Node.js",
                 color: "bg-ctp-green text-ctp-base",
-                level: 86
+                level: 86,
+                icon: <FaNodeJs />
               },
               {
                 name: "Three.js",
                 color: "bg-ctp-mauve text-ctp-base",
-                level: 67
+                level: 67,
+                icon: <FaCube />
               }
             ]}
           />

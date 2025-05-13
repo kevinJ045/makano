@@ -813,3 +813,7 @@ body > main > .main {
 .laptop3d.close .lid {
   transform: translateY(-346.66px) rotateX(-180deg);
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
