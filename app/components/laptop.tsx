@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { execCommand, existsCommand } from '../context/commands';
+import { useTransform, motion, useScroll } from "motion/react";
+import { WelcomeText } from '../const/welcome';
 
 
 const ANSI_REGEX = /\x1b\[[0-9;]*m/;
@@ -108,7 +110,7 @@ export const pageData = [
 				states.introDone = false;				
 				states.currentInput = '';
 				states.prompt = '$ ';
-				states.introText = '\x1b[1;31mHello\x1b[1;32m\nHii\x1b[1;33m\nMan\x1b[0m';
+				states.introText = '$ cat /home/makano/welcome.txt\n' + WelcomeText;
 				states.currentIntroIndex = 0;
 				states._frame = 0;
 				states.writeLine = (...lines: string[]) => {
@@ -232,13 +234,21 @@ export const LaptopCanvas = ({ currentPage, onClick, setPage, rotating = false, 
 	setPage: (number: number | any) => any,
 	rotating?: boolean,
 	rotation?: number,
-	events?: LaptopEvents
+	events?: LaptopEvents,
+	scrollYProgress?: any
 }) => {
 
 
 	const updateFunction = useRef<any>();
 	const canvasRef = useRef<any>();
-	const contextRef = useRef<any>();
+	const containerRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+
 
 	useEffect(() => {
 		if(!events) return;
@@ -287,17 +297,42 @@ export const LaptopCanvas = ({ currentPage, onClick, setPage, rotating = false, 
 		requestAnimationFrame(frame);
 	}, []);
 
-	return <div className="w-[300px] relative h-[300px]">
-		<div className="laptop3d">
-			<div className="base"><div className="front"></div></div>
-			<div className="lid">
+	const laptopTransform = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [
+      "translate(-50%, -50%) rotateX(60deg) rotateZ(-45deg)", // initial
+      "translate(-50%, -50%) rotateX(80deg) rotateZ(45deg)"     // final
+    ]
+  );
+
+  const lidTransform = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [
+      "translateY(-346.66px) rotateX(-90deg)", // initial
+      "translateY(-346.66px) rotateX(-180deg)"          // final
+    ]
+  );
+
+
+	return <div ref={containerRef} className="w-[300px] relative h-[300px] mx-auto">
+		<motion.div
+			className="laptop3d absolute left-1/2 top-1/2"
+			style={{ transform: laptopTransform }}
+		>
+			<div className="base">
+				<div className="front"></div>
+			</div>
+
+			<motion.div className="lid" style={{ transform: lidTransform }}>
 				<div className="back"></div>
 				<div className="front">
 					<div className="screen">
-						<canvas className='w-full h-full' ref={canvasRef}></canvas>
+						<canvas className="w-full h-full" ref={canvasRef}></canvas>
 					</div>
 				</div>
-			</div>
-		</div>
+			</motion.div>
+		</motion.div>
 	</div>
 }

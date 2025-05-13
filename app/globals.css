@@ -280,7 +280,7 @@ body > main > .main {
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
   top: 0;
-  left: -3px;
+  left: -2px;
 }
 
 
@@ -805,7 +805,7 @@ body > main > .main {
   transform-origin: top left;
   transform: rotateX(90deg) rotateY(90deg);
 }
-fbfbfc
+
 .laptop3d.close {
   transform: translate(-50%, -50%) rotateX(80deg) rotateZ(45deg);
 }

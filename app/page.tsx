@@ -5,21 +5,24 @@ import BlobPattern from './components/blobs';
 import MainSection from './components/sections/main-section';
 import { BackgroundBeams } from '@/components/ui/background-beams';
 import ScrollTrailSVG from './components/brush';
-import Archive from './archive/layout';
 import PerformanceIntensive from './components/performance';
 import CubesScene from './components/cubes';
 import AboutSection from './components/sections/about-section';
 import { CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import SocialIcons from './components/items/social-icons';
+import Archive from './components/apps/archive';
+import ArchiveDialog from './components/apps/dialog';
 
 export default function Home() {
 
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
-    target: containerRef,
+    // target: containerRef,
     offset: ["start start", "end start"]
   });
+
+  const [showArchive, setAhowArchive] = useState(false);
 
   return (
     <div
@@ -30,9 +33,8 @@ export default function Home() {
       <BackgroundBeams />
       {/* </PerformanceIntensive> */}
       {/* <ScrollTrailSVG onPointHit={() => {
-        alert('Hah')
       }} scrollYProgress={scrollYProgress} lineWidth={20} /> */}
-      <MainSection scrollYProgress={scrollYProgress} />
+      <MainSection openPage={() => setAhowArchive(true)} scrollYProgress={scrollYProgress} />
       <AboutSection />
       <div className="w-full min-h-screen my-20 flex justify-center items-center">
         <div className='space-y-5'>
@@ -50,9 +52,12 @@ export default function Home() {
           <p className='text-ctp-subtext1 font-bold text-[12px]'>More coming soon...</p>
         </div>
       </div>
+      {/* <Archive /> */}
+
+      <ArchiveDialog show={showArchive} close={() => setAhowArchive(false)} />
 
       {/* <div id="lll-1"></div>
-      {Array(5).fill(0).map((_, i) => i)
+      {Array(15).fill(0).map((_, i) => i)
         .map((i) => <div key={i} className="height-very-long w-full">hello {i}</div>)} */}
     </div>
   );

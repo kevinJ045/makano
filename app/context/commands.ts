@@ -25,9 +25,9 @@ export const Commands = {
           return isDir ? `${DIR_COLOR}${item}${RESET_COLOR}` : `${FILE_COLOR}${item}${RESET_COLOR}`;
         });
 
-        const rows = Math.ceil(gridItems.length / 3);
+        const rows = Math.ceil(gridItems.length / 2);
         for (let i = 0; i < rows; i++) {
-          const rowItems = gridItems.slice(i * 3, i * 3 + 3);
+          const rowItems = gridItems.slice(i * 2, i * 2 + 2);
           formattedItems += rowItems.join("    ") + "\n";
         }
 

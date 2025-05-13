@@ -1,15 +1,19 @@
 import Image from 'next/image'
-import { Posts } from '../posts/page'
-import { Projects } from '../projects/page'
+import { Posts } from './posts'
+import { Projects } from './projects'
 
-export default function Home() {
+export default function HomeArchive({
+  onOpen
+} : {
+  onOpen?: (a: any) => void
+}) {
   return (
     <div className="home">
       <div className="text-xl font-bold"> Home/ </div>
       <div className="m-5">
         <div className="text-lg font-bold opacity-60"> Posts </div>
         <div className="mt-2">
-          <Posts length={3} page={0} />
+          <Posts onOpen={onOpen} length={3} page={0} />
         </div>
       </div>
       <div className="m-5">

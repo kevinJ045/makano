@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/card"
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getAllProjects } from '../controllers/projects';
-import { Project } from '../models/project';
+import { getAllProjects } from '@/app/controllers/projects';
+import { Project } from '@/app/models/project';
 import { ChevronRight, Github } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
@@ -51,8 +51,8 @@ export function Projects({ length, page }: { page: number, length: number } = { 
 			<div className="flex flex-wrap gap-2">
 		
 				{
-					projects.map((project: Project) => (<>
-						<Card className='w-[300px]'>
+					projects.map((project: Project, index) => (<>
+						<Card key={index} className='w-[300px]'>
 							<CardContent className='relative pt-4'>
 							<div className='w-full h-[120px] flex justify-center items-center'>
 							{project.image ? (

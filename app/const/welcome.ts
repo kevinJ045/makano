@@ -1,0 +1,1 @@
+export const WelcomeText = `\x1b[1;31mHello!!\x1b[0m`

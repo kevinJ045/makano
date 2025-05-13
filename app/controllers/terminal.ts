@@ -5,15 +5,20 @@ type eventMap = {
   [key: string]: any
 }
 
-export function useTerminalEvents(term: any) {
+let termUsed: any = null;
+export function useTerminalEvents(termRef: any) {
   const renderedLines = useRef<string[]>([]);
   const renderedInput = useRef<string>("");
+
+  if(termUsed){
+    return termUsed;
+  }
 
   const events: eventMap = {};
 
 
   const clearTerminal = () => {
-    term.reset();
+    termRef.current.reset();
     renderedLines.current = [];
     renderedInput.current = "";
   };
@@ -23,18 +28,18 @@ export function useTerminalEvents(term: any) {
   };
 
   events["terminal:line_break"] = () => {
-    term?.write('\n\r');
+    termRef.current?.write('\n\r');
   },
 
   events["terminal:write_lines"] = (lines: string[]) => {
     lines.forEach(line => {
-      term.writeln(line);
+      termRef.current.writeln(line);
       renderedLines.current.push(line);
     });
   };
   events["terminal:write"] = (lines: string[]) => {
     lines.forEach(line => {
-      term.write(line);
+      termRef.current?.write(line);
     });
   };
 
@@ -44,23 +49,23 @@ export function useTerminalEvents(term: any) {
 
     const linesToRewrite = renderedLines.current.slice(index);
 
-    term.reset();
-    renderedLines.current.slice(0, index).forEach(l => term.writeln(l));
-    linesToRewrite.forEach(l => term.writeln(l));
-    if (renderedInput.current) term.write(renderedInput.current);
+    termRef.current.reset();
+    renderedLines.current.slice(0, index).forEach(l => termRef.current.writeln(l));
+    linesToRewrite.forEach(l => termRef.current.writeln(l));
+    if (renderedInput.current) termRef.current.write(renderedInput.current);
   };
 
   events["terminal:delete_line"] = (index: number) => {
     if (index < 0 || index >= renderedLines.current.length) return;
     renderedLines.current.splice(index, 1);
-    term.reset();
-    renderedLines.current.forEach(l => term.writeln(l));
-    if (renderedInput.current) term.write(renderedInput.current);
+    termRef.current.reset();
+    renderedLines.current.forEach(l => termRef.current.writeln(l));
+    if (renderedInput.current) termRef.current.write(renderedInput.current);
   };
 
   events["terminal:set_input"] = (input: string) => {
-    term?.write('\x1b[2K\r');
-    term.write('$ ' + input);
+    termRef.current?.write('\x1b[2K\r');
+    termRef.current.write('$ ' + input);
     renderedInput.current = input;
   };
 
@@ -68,6 +73,8 @@ export function useTerminalEvents(term: any) {
     console.log(name, cb);
     events[name] = cb;
   }
+
+  termUsed = events;
 
   return events;
 }

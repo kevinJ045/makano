@@ -10,7 +10,6 @@ function parsePost(postContent: string, filename: string) {
 		filename: filename
   };
 
-  // Check for metadata lines and extract information
   for (let line of postLines) {
     if (line.startsWith('%== title:')) {
       post.title = line.replace('%== title:', '').trim();
@@ -19,7 +18,6 @@ function parsePost(postContent: string, filename: string) {
     } else if (line.startsWith('%== tags:')) {
       post.tags = line.replace('%== tags:', '').trim().split(',').map(tag => tag.trim());
     } else {
-      // Assuming everything below metadata lines is the main content
       post.content += line + '\n';
     }
   }
@@ -28,7 +26,7 @@ function parsePost(postContent: string, filename: string) {
 }
 
 export async function getAllPosts(startIndex = 0, count = 10) {
-  let perPage = count > 100 ? 100 : count; // GitHub API allows a maximum of 100 items per page
+  let perPage = count > 100 ? 100 : count;
   let totalPages = Math.ceil(count / perPage);
   let posts: Post[] = [];
 
@@ -38,7 +36,6 @@ export async function getAllPosts(startIndex = 0, count = 10) {
     try {
       let postsRaw = await fetch(url).then(r => r.json());
 
-      // Iterate through each file in the 'posts' folder
       for (let post of postsRaw) {
         if (post.type === 'file') {
           let postContent = await fetch(post.download_url).then(r => r.text());
@@ -51,7 +48,6 @@ export async function getAllPosts(startIndex = 0, count = 10) {
     }
   }
 
-  // Slice the array to return the specified range
   return posts.slice(startIndex, startIndex + count);
 }
 

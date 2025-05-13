@@ -1,7 +1,7 @@
 import { Project } from "../models/project";
 
 export async function getAllProjects(startIndex = 0, count = 10) {
-  let perPage = count > 100 ? 100 : count; // GitHub API allows a maximum of 100 items per page
+  let perPage = count > 100 ? 100 : count;
   let totalPages = Math.ceil(count / perPage);
   let projects: Project[] = [];
 
@@ -11,7 +11,6 @@ export async function getAllProjects(startIndex = 0, count = 10) {
     try {
       let postsRaw = await fetch(url).then(r => r.json());
 
-      // Iterate through each file in the 'posts' folder
       for (let project of postsRaw) {
         if (project.type === 'file') {
           let projectContent = await fetch(project.download_url).then(r => r.json());
@@ -24,6 +23,5 @@ export async function getAllProjects(startIndex = 0, count = 10) {
     }
   }
 
-  // Slice the array to return the specified range
   return projects.slice(startIndex, startIndex + count);
 }
