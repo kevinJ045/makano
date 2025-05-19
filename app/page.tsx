@@ -33,8 +33,8 @@ export default function Home() {
       className='w-screen h-screen'
       ref={containerRef}>
       {/* <PerformanceIntensive minFPS={10}> */}
-      {/* <BlobPattern /> */}
-      {/* <BackgroundBeams /> */}
+      <BlobPattern />
+      <BackgroundBeams />
       {/* </PerformanceIntensive> */}
       {/* <ScrollTrailSVG onPointHit={() => {
       }} scrollYProgress={scrollYProgress} lineWidth={20} /> */}
