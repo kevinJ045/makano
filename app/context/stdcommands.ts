@@ -3,6 +3,7 @@ export function registerCommands() {
 
   FS.makeFile('/bin/ls', (
     (o: any, dirname: string = '') => {
+      const { FS } = o;
       dirname = o.getCurrentDir(dirname);
       if (FS.exists(dirname)) {
         const items = FS.readdir(dirname);
@@ -14,7 +15,7 @@ export function registerCommands() {
           const FILE_COLOR = "\x1b[32m";
           const RESET_COLOR = "\x1b[0m";
 
-          const gridItems = items.map(item => {
+          const gridItems = items.map((item: any) => {
             const isDir = FS.exists(`${dirname}/${item}`) && FS.readdir(`${dirname}/${item}`);
             return isDir ? `${DIR_COLOR}${item}${RESET_COLOR}` : `${FILE_COLOR}${item}${RESET_COLOR}`;
           });
@@ -48,6 +49,7 @@ export function registerCommands() {
 
   FS.makeFile('/bin/cat', (
     (o: any, filepath: string) => {
+      const { FS } = o;
       filepath = o.getCurrentDir(filepath);
       if (FS.exists(filepath)) {
         const content = FS.readFile(filepath);
