@@ -6,6 +6,7 @@ function parsePost(postContent: string, filename: string) {
     title: '',
     subtitle: '',
     content: '',
+    image: '',
     tags: new Array<string>(),
 		filename: filename
   };
@@ -17,6 +18,8 @@ function parsePost(postContent: string, filename: string) {
       post.subtitle = line.replace('%== subtitle:', '').trim();
     } else if (line.startsWith('%== tags:')) {
       post.tags = line.replace('%== tags:', '').trim().split(',').map(tag => tag.trim());
+    } else if (line.startsWith('%== image:')) {
+      post.image = line.replace('%== image:', '').trim();
     } else {
       post.content += line + '\n';
     }

@@ -3,9 +3,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import Archive from './archive';
 
-export default function ArchiveDialog({ show, close }: { show: boolean, close?: () => void }) {
+export default function WindowDialog({ show, close, Page }: { Page: React.FC<any>, show: boolean, close?: () => void }) {
   return (
     <AnimatePresence>
+      {show && <div onClick={close} className="w-full h-screen backdrop-blur-md z-10 bg-opacity-10 bg-black absolute top-0 left-0"></div>}
       {show && (
         <motion.div
           key="archive-dialog"
@@ -15,7 +16,7 @@ export default function ArchiveDialog({ show, close }: { show: boolean, close?: 
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           className="rounded-l-2xl top-1/2 overflow-hidden fixed w-[90vw] h-[95dvh] bg-ctp-mantle z-50"
         >
-          <Archive close={close} />
+          <Page close={close} />
         </motion.div>
       )}
     </AnimatePresence>

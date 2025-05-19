@@ -1,6 +1,6 @@
 'use client';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import BlobPattern from './components/blobs';
 import MainSection from './components/sections/main-section';
 import { BackgroundBeams } from '@/components/ui/background-beams';
@@ -12,7 +12,7 @@ import { CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import SocialIcons from './components/items/social-icons';
 import Archive from './components/apps/archive';
-import ArchiveDialog from './components/apps/dialog';
+import WindowDialog from './components/apps/dialog';
 
 export default function Home() {
 
@@ -24,17 +24,23 @@ export default function Home() {
 
   const [showArchive, setAhowArchive] = useState(false);
 
+  useEffect(() => {
+    setAhowArchive(location.hash.startsWith('#posts/'));
+  }, []);
+
   return (
     <div
       className='w-screen h-screen'
       ref={containerRef}>
       {/* <PerformanceIntensive minFPS={10}> */}
-      <BlobPattern />
-      <BackgroundBeams />
+      {/* <BlobPattern /> */}
+      {/* <BackgroundBeams /> */}
       {/* </PerformanceIntensive> */}
       {/* <ScrollTrailSVG onPointHit={() => {
       }} scrollYProgress={scrollYProgress} lineWidth={20} /> */}
-      <MainSection openPage={() => setAhowArchive(true)} scrollYProgress={scrollYProgress} />
+      <MainSection openPage={(page) => {
+        if(page == "archive") setAhowArchive(true)
+      }} scrollYProgress={scrollYProgress} />
       <AboutSection />
       <div className="w-full min-h-screen my-20 flex justify-center items-center">
         <div className='space-y-5'>
@@ -54,8 +60,8 @@ export default function Home() {
       </div>
       {/* <Archive /> */}
 
-      <ArchiveDialog show={showArchive} close={() => setAhowArchive(false)} />
-
+      <WindowDialog Page={Archive} show={showArchive} close={() => setAhowArchive(false)} />
+        
       {/* <div id="lll-1"></div>
       {Array(15).fill(0).map((_, i) => i)
         .map((i) => <div key={i} className="height-very-long w-full">hello {i}</div>)} */}

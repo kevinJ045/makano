@@ -5,5 +5,6 @@ export interface Post {
 	subtitle: string,
 	content: string,
 	tags: string[],
-	filename?: string
+	filename?: string,
+	image?: string
 }

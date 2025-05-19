@@ -3,6 +3,9 @@ import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import "xterm/css/xterm.css";
 
+import { Fira_Code } from 'next/font/google'
+const fira_code = Fira_Code({ subsets: ['latin'] })
+
 export default function XTermTerminal({
   onInit = () => {},
   onInput = () => {}
@@ -64,5 +67,5 @@ export default function XTermTerminal({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  return <div ref={xtermRef} style={{ width: "100%", height: "400px" }} />;
+  return <div ref={xtermRef} className={fira_code.className} style={{ width: "100%", height: "400px" }} />;
 }
