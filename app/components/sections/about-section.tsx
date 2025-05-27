@@ -91,7 +91,7 @@ export default function AboutSection() {
           Maki-Kun
         </h1>
         <p className="mt-4 font-normal text-base text-neutral-300 max-w-lg text-center mx-auto">
-          A man like any other trying to find a path of stablity, piece and order.
+          A man like any other trying to find a path of stablity, peace and order.
         </p>
         <Button className='bg-ctp-mauve w-32 rounded-full mx-auto' onClick={() => setAbout(about == 'me' ? 'stack' : 'me')}>{
           about == 'me' ? 'Tech Stack' : 'About Me'
