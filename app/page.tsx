@@ -13,6 +13,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import SocialIcons from './components/items/social-icons';
 import Archive from './components/apps/archive';
 import WindowDialog from './components/apps/dialog';
+import RecentProjects from './components/projects';
+import { Posts } from './components/apps/pages/posts';
 
 export default function Home() {
 
@@ -39,9 +41,31 @@ export default function Home() {
       {/* <ScrollTrailSVG onPointHit={() => {
       }} scrollYProgress={scrollYProgress} lineWidth={20} /> */}
       <MainSection openPage={(page) => {
-        if(page == "archive") setAhowArchive(true)
+        if (page == "archive") setAhowArchive(true)
       }} scrollYProgress={scrollYProgress} />
       <AboutSection />
+
+      <div className='w-full min-h-screen'>
+        <div className="max-w-7xl mx-auto pt-20 pb-5 px-4 md:px-8 lg:px-10">
+          <h2 className="text-lg block-title md:text-4xl mb-r max-w-4xl font-bold">
+            Posts
+          </h2>
+          <p className="relative text-center text-sm md:text-base max-w-sm mx-auto mt-7">
+            Here's a few of my latest posts if you wanna get to that
+          </p>
+        </div>
+
+        <div className="w-10/12 mx-auto">
+          <Posts onOpen={() => {
+            setAhowArchive(true);
+          }} length={4} page={0} className={"grid grid-cols-2"} />
+        </div>
+      </div>
+
+      <RecentProjects />
+
+
+
       <div className="w-full min-h-screen my-20 flex justify-center items-center">
         <div className='space-y-5'>
           <CardHeader className="flex flex-col items-center pb-2">
@@ -61,7 +85,7 @@ export default function Home() {
       {/* <Archive /> */}
 
       <WindowDialog Page={Archive} show={showArchive} close={() => setAhowArchive(false)} />
-        
+
       {/* <div id="lll-1"></div>
       {Array(15).fill(0).map((_, i) => i)
         .map((i) => <div key={i} className="height-very-long w-full">hello {i}</div>)} */}

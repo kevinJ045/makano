@@ -21,7 +21,7 @@ export default function Archive({ close: closeL } : { close?: () => void }) {
 
   const setCurrentTab = (tab: any) => {
     setCurrentTab_r(tab);
-    location.hash = "#archive"
+    // location.hash = "#archive"
   }
 
   useEffect(() => {

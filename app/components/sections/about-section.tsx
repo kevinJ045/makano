@@ -13,30 +13,9 @@ import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { FaCube, FaDatabase, FaDocker, FaJava, FaLinux, FaNodeJs, FaReact, FaSass } from 'react-icons/fa';
 import { SiBlender, SiCplusplus, SiFlutter, SiGodotengine, SiMongodb, SiNestjs, SiNextdotjs, SiNixos, SiPrisma, SiPython, SiRust, SiTailwindcss } from 'react-icons/si';
+import { Stacks } from '@/app/const/stacks';
+import SkillLevelItem, { skill } from '../stack';
 
-type skill = {
-  name: string,
-  color: string,
-  level: number,
-  icon?: ReactNode
-};
-
-function SkillLevelItem({
-  name,
-  icon,
-  color,
-  level,
-  showLevel = true
-}: skill & {
-  showLevel?: boolean
-}) {
-  return (<div className={cn(showLevel ? "flex gap-2 items-center" : "w-auto")}>
-    <Badge className={cn('space-x-[5px]', color, showLevel ? 'w-[110px]' : '')}>
-      {icon || <span className='w-3 h-3 bg-ctp-base rounded-full'></span>} <span>{name}</span>
-    </Badge>
-    {showLevel && <Progress color={color} value={level} />}
-  </div>)
-}
 
 function SkillGroup({
   skills,
@@ -156,18 +135,8 @@ export default function AboutSection() {
                 color: "bg-ctp-yellow text-ctp-base",
                 level: 89
               },
-              {
-                name: "Node.js",
-                color: "bg-ctp-green text-ctp-base",
-                level: 86,
-                icon: <FaNodeJs />
-              },
-              {
-                name: "Three.js",
-                color: "bg-ctp-mauve text-ctp-base",
-                level: 67,
-                icon: <FaCube />
-              }
+              Stacks.nodejs,
+              Stacks.threejs
             ]}
           />
 
@@ -180,18 +149,8 @@ export default function AboutSection() {
                 color: 'bg-ctp-blue text-ctp-base',
                 level: 83
               },
-              {
-                icon: <SiTailwindcss />,
-                name: "Tailwind",
-                color: "bg-ctp-sky text-ctp-base",
-                level: 76
-              },
-              {
-                icon: <FaSass />,
-                name: "Sass",
-                color: "bg-ctp-red text-ctp-base",
-                level: 73
-              }
+              Stacks.tailwind,
+              Stacks.sass
             ]}
           />
         </div>
@@ -201,48 +160,13 @@ export default function AboutSection() {
             title="Others"
             icon="/stack.png"
             skills={[
-              {
-                name: "Blender",
-                icon: <SiBlender />,
-                color: "bg-ctp-peach text-ctp-base",
-                level: 60
-              },
-              {
-                name: "Godot",
-                icon: <SiGodotengine />,
-                color: "bg-ctp-blue text-ctp-base",
-                level: 44
-              },
-              {
-                name: "Rust",
-                icon: <SiRust />,
-                color: "bg-ctp-peach text-ctp-base",
-                level: 50
-              },
-              {
-                name: "Python",
-                icon: <SiPython />,
-                color: "bg-gradient-to-r from-ctp-yellow to-ctp-blue text-ctp-base",
-                level: 63
-              },
-              {
-                name: "Java",
-                icon: <FaJava />,
-                color: "bg-ctp-yellow text-ctp-base",
-                level: 55
-              },
-              {
-                name: "Flutter",
-                icon: <SiFlutter />,
-                color: "bg-ctp-sky text-ctp-base",
-                level: 43
-              },
-              {
-                name: "C++",
-                icon: <SiCplusplus />,
-                color: "bg-ctp-mauve text-ctp-base",
-                level: 62
-              }
+              Stacks.blender,
+              Stacks.godot,
+              Stacks.rust,
+              Stacks.python,
+              Stacks.java,
+              Stacks.flutter,
+              Stacks.cpp
             ]}
           />
 
@@ -252,42 +176,12 @@ export default function AboutSection() {
               title="Database and System"
               icon="/db.png"
               skills={[
-                {
-                  name: "Linux",
-                  icon: <FaLinux />,
-                  color: "bg-ctp-crust text-ctp-text",
-                  level: 90
-                },
-                {
-                  name: "NixOS",
-                  icon: <SiNixos />,
-                  color: "bg-ctp-sky text-ctp-base",
-                  level: 45
-                },
-                {
-                  name: "Docker",
-                  icon: <FaDocker />,
-                  color: "bg-ctp-blue text-ctp-base",
-                  level: 53
-                },
-                {
-                  name: "Mongo",
-                  icon: <SiMongodb />,
-                  color: "bg-ctp-green text-ctp-base",
-                  level: 60
-                },
-                {
-                  name: "Prisma",
-                  icon: <SiPrisma />,
-                  color: "bg-ctp-pink text-ctp-base",
-                  level: 54
-                },
-                {
-                  name: "SQL",
-                  icon: <FaDatabase />,
-                  color: "bg-ctp-teal text-ctp-base",
-                  level: 75
-                }
+                Stacks.linux,
+                Stacks.nixos,
+                Stacks.docker,
+                Stacks.mongo,
+                Stacks.prisma,
+                Stacks.sql
               ]}
             />
           </div>
@@ -303,24 +197,9 @@ export default function AboutSection() {
                 color: "bg-ctp-blue text-ctp-base",
                 level: 86
               },
-              {
-                name: "React",
-                icon: <FaReact />,
-                color: "bg-ctp-mauve text-ctp-base",
-                level: 66
-              },
-              {
-                name: "Next.js",
-                icon: <SiNextdotjs />,
-                color: "bg-white text-ctp-base",
-                level: 54
-              },
-              {
-                name: "NestJs",
-                icon: <SiNestjs />,
-                color: "bg-ctp-peach text-ctp-base",
-                level: 61
-              }
+              Stacks.react,
+              Stacks.nextjs,
+              Stacks.nestjs
             ]}
           />
         </div>

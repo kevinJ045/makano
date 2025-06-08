@@ -162,6 +162,7 @@ export const pageData = [
 				}
 
 				events.on('keydown', (event: any) => {
+					if(event.ctrlKey) return;
 					if(states.introDone) {
 						event.preventDefault();
 						const key = event.key;

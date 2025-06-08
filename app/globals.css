@@ -817,3 +817,37 @@ body > main > .main {
 ::-webkit-scrollbar {
   display: none;
 }
+
+
+.block-title{
+	position: relative;
+	text-align: center;
+}
+
+.block-title:not(.auto){
+	min-width: 150px;
+	max-width: 250px;
+	margin: 1px auto;
+}
+
+.block-title:before, .block-title:after{
+	content: "";
+	display: block;
+	position: absolute;
+	width: 50px;
+	height: 10px;
+	border-radius: 50px;
+	background: var(--ctp-mocha-red);
+	bottom: -20px;
+	left: 50%;
+}
+
+.block-title:after{
+	background: var(--ctp-mocha-blue);
+	transform: translate(-30px, 0);
+	width: 25px;
+}
+
+.block-title .first-word{
+	color: var(--ctp-mocha-red);
+}
