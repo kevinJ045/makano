@@ -58,7 +58,7 @@ export default function Home() {
         <div className="w-10/12 mx-auto">
           <Posts onOpen={() => {
             setAhowArchive(true);
-          }} length={4} page={0} className={"grid grid-cols-2"} />
+          }} length={4} page={0} className={"grid md:grid-cols-2"} />
         </div>
       </div>
 
