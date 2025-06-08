@@ -851,3 +851,113 @@ body > main > .main {
 .block-title .first-word{
 	color: var(--ctp-mocha-red);
 }
+
+.book-ult {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8.5in;
+  height: 11in;
+  transform: scale(0.5) translate(-50%, -100%);
+  perspective: 3000px;
+}
+
+.book-page {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.3);
+  font-family: Tinos, monospace;
+  font-size: 12pt;
+  transform: rotateY(0deg);
+  transform-origin: 0 center;
+  transform-style: preserve-3d;
+  transition: transform ease 1s;
+}
+.book-page .front, .book-page .back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 1in 1.25in;
+  background: white;
+  color: black;
+}
+.book-page .front > header, .book-page .back > header {
+  text-align: center;
+}
+.book-page .front > header h1, .book-page .front > header h2, .book-page .front > header h3, .book-page .front > header h4, .book-page .front > header h5, .book-page .front > header h6, .book-page .back > header h1, .book-page .back > header h2, .book-page .back > header h3, .book-page .back > header h4, .book-page .back > header h5, .book-page .back > header h6 {
+  margin-bottom: 24pt;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.book-page .front > header p, .book-page .back > header p {
+  margin-bottom: 12pt;
+}
+.book-page .front > header p:last-of-type, .book-page .back > header p:last-of-type {
+  margin-bottom: 24pt;
+}
+.book-page .front section p, .book-page .back section p {
+  text-align: justify;
+}
+.book-page .front section p tab, .book-page .back section p tab {
+  margin-left: 12pt;
+}
+.book-page .front section figure img, .book-page .back section figure img {
+  width: 100%;
+  margin-bottom: 12pt;
+}
+.book-page .front section figure figcaption, .book-page .back section figure figcaption {
+  text-align: center;
+  margin-bottom: 12pt;
+}
+.book-page .front section table, .book-page .back section table {
+  border-collapse: collapse;
+  margin: 1em;
+  width: 94%;
+  border: 1px solid;
+}
+.book-page .front section table caption, .book-page .back section table caption {
+  margin-bottom: 12pt;
+}
+.book-page .front section table th, .book-page .back section table th {
+  border: 1px solid;
+  font-weight: normal;
+}
+.book-page .front section table td, .book-page .back section table td {
+  border: 1px solid;
+  height: 14pt;
+  text-align: center;
+}
+.book-page .front .book-pagenumber, .book-page .back .book-pagenumber {
+  position: absolute;
+  top: 10.5in;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.book-page .front {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1) 3.3%, white 10%);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+.book-page .back {
+  background-image: linear-gradient(to left, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1) 3.3%, white 10%);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  transform: rotateY(180deg);
+}
+.book-page.turned {
+  transform: rotateY(-180deg);
+}
+
+#cover .front, #cover .back {
+  color: #a96;
+  text-shadow: -1px -1px rgba(0, 0, 0, 0.9), 1px 1px rgba(255, 255, 255, 0.9);
+}
+#cover .front header, #cover .back header {
+  font-size: 48px;
+}

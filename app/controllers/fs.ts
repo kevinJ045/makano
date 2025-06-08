@@ -59,13 +59,9 @@ export default class FS {
     '/bin/',
     '/bin/bash "echo hii"',
     '/home/makano/',
-    '/home/makano/about1.txt "hello"',
-    '/home/makano/about2.txt "hello"',
-    '/home/makano/about3.txt "hello"',
-    '/home/makano/about4.txt "hello"',
-    '/home/makano/about5.txt "hello"',
-    '/home/makano/about6.txt "hello"',
-    '/home/makano/about7.txt "hello"',
+    '/home/makano/example.txt "hello"',
+    '/home/makano/example.coffee "print \'hi\'"',
+    '/home/makano/example.js "console.log(\'Hello\')"',
   ]);
 
   private static findNode(filepath: string): FileSystemNode | null {

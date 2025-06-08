@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@makano/rew": "^1.5.9",
+    "@monaco-editor/react": "^4.7.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",

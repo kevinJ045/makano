@@ -15,6 +15,8 @@ import Archive from './components/apps/archive';
 import WindowDialog from './components/apps/dialog';
 import RecentProjects from './components/projects';
 import { Posts } from './components/apps/pages/posts';
+import { Labs } from './components/labs';
+import BookViewer from './components/books';
 
 export default function Home() {
 
@@ -25,10 +27,15 @@ export default function Home() {
   });
 
   const [showArchive, setAhowArchive] = useState(false);
+  const [showLabs, setShowLabs] = useState(false);
 
   useEffect(() => {
     setAhowArchive(location.hash.startsWith('#posts/'));
   }, []);
+
+  useEffect(() => {
+    (window as any).labsOpen = showLabs;
+  }, [showLabs]);
 
   return (
     <div
@@ -42,6 +49,7 @@ export default function Home() {
       }} scrollYProgress={scrollYProgress} lineWidth={20} /> */}
       <MainSection openPage={(page) => {
         if (page == "archive") setAhowArchive(true)
+        if (page == "labs") setShowLabs(true)
       }} scrollYProgress={scrollYProgress} />
       <AboutSection />
 
@@ -65,6 +73,24 @@ export default function Home() {
       <RecentProjects />
 
 
+      {/* <div className="relative h-screen">
+        <BookViewer
+          color="#f5f0e1"
+          coverTitle="My Dynamic Book"
+          coverSubtitle="Some dynamic book"
+          pages={[
+            <section key="1">
+              <p><strong>Abstract:</strong> This is the first page.</p>
+            </section>,
+            <section key="2">
+              <p><strong>Chapter 1:</strong> Here's the second page.</p>
+            </section>,
+            <section key="3">
+              <p><strong>Conclusion:</strong> The end.</p>
+            </section>,
+          ]}
+        />
+      </div> */}
 
       <div className="w-full min-h-screen my-20 flex justify-center items-center">
         <div className='space-y-5'>
@@ -85,6 +111,7 @@ export default function Home() {
       {/* <Archive /> */}
 
       <WindowDialog Page={Archive} show={showArchive} close={() => setAhowArchive(false)} />
+      <WindowDialog Page={Labs} show={showLabs} close={() => setShowLabs(false)} />
 
       {/* <div id="lll-1"></div>
       {Array(15).fill(0).map((_, i) => i)
