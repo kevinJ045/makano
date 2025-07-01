@@ -1,3 +1,5 @@
+import { WelcomeText } from "../const/welcome";
+
 type FileSystemNode = {
   name: string;
   type: 'dir' | 'file';
@@ -59,6 +61,7 @@ export default class FS {
     '/bin/',
     '/bin/bash "echo hii"',
     '/home/makano/',
+    '/home/makano/welcome.ir "'+WelcomeText.replace(/\"/, '\\"')+'"',
     '/home/makano/example.txt "hello"',
     '/home/makano/example.coffee "print \'hi\'"',
     '/home/makano/example.js "console.log(\'Hello\')"',

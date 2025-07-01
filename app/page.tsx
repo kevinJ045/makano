@@ -15,8 +15,11 @@ import Archive from './components/apps/archive';
 import WindowDialog from './components/apps/dialog';
 import RecentProjects from './components/projects';
 import { Posts } from './components/apps/pages/posts';
-import { Labs } from './components/labs';
+import dynamic from "next/dynamic";
 import BookViewer from './components/books';
+const Labs = dynamic(() => import('./components/labs'), {
+  ssr: false,
+});
 
 export default function Home() {
 
@@ -111,7 +114,7 @@ export default function Home() {
       {/* <Archive /> */}
 
       <WindowDialog Page={Archive} show={showArchive} close={() => setAhowArchive(false)} />
-      <WindowDialog Page={Labs} show={showLabs} close={() => setShowLabs(false)} />
+      <WindowDialog Page={Labs as any} show={showLabs} close={() => setShowLabs(false)} />
 
       {/* <div id="lll-1"></div>
       {Array(15).fill(0).map((_, i) => i)

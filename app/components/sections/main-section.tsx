@@ -22,7 +22,7 @@ export default function MainSection({ scrollYProgress, openPage = () => alert('C
   scrollYProgress: MotionValue<number>,
   openPage?: (page: string) => void
 }) {
-  const [laptopPage, setLaptopPage] = useState(1);
+  const [laptopPage, setLaptopPage] = useState(0);
   const [term, setTerm] = useState<null | Terminal>();
 
   const termRef = useRef<any>(null);

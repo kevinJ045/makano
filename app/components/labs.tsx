@@ -97,7 +97,7 @@ type OpenFile = {
   content: string;
 };
 
-export function Labs() {
+export default function Labs({ close: closeL } : { close?: () => void }) {
   const [openFiles, setOpenFiles] = useState<OpenFile[]>([
     { filename: "/home/makano/example.js", content: FS.readFile("/home/makano/example.js") ?? "" }
   ]);

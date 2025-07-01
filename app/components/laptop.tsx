@@ -53,7 +53,7 @@ export const pageData = [
 
 			if (!isUpdate) {
 				states.textY = canvasHeight * 0.1;
-				states.lineHeight = 100;
+				states.lineHeight = 12;
 				states.messages = [
 					'Booting Linux...',
 					'Initializing system...',
@@ -80,7 +80,7 @@ export const pageData = [
 			}
 
 			ctx.fillStyle = 'white';
-			ctx.font = '20px monospace';
+			ctx.font = '12px monospace';
 
 			for (let i = 0; i < states.messages.length; i++) {
 				ctx.fillText(states.messages[i], canvasWidth * 0.1, states.textY + i * states.lineHeight);
@@ -110,7 +110,7 @@ export const pageData = [
 				states.introDone = false;				
 				states.currentInput = '';
 				states.prompt = '$ ';
-				states.introText = '$ cat /home/makano/welcome.txt\n' + WelcomeText;
+				states.introText = '$ cat ~/welcome.ir\n' + WelcomeText;
 				states.currentIntroIndex = 0;
 				states._frame = 0;
 				states.writeLine = (...lines: string[]) => {
