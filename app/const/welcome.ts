@@ -2,8 +2,8 @@ export const WelcomeText = `\x1b[38;5;141mpub\x1b[0m \x1b[38;5;204mclass\x1b[0m 
   \x1b[38;5;204mextends\x1b[0m MaleHuman
   \x1b[38;5;204mimplements\x1b[0m
     \x1b[38;5;228mProgrammer\x1b[0m,
-    \x1b[38;5;228mPhilosopher\x1b[0m,
-    \x1b[38;5;228mLazyAF\x1b[0m
+    \x1b[38;5;228mLinuxUser\x1b[0m,
+    \x1b[38;5;228mSysAdmin\x1b[0m
 
   \x1b[38;5;141mpub\x1b[0m \x1b[38;5;141mreadonly\x1b[0m name: \x1b[38;5;109mstr\x1b[0m = \x1b[38;5;149m"Makano"\x1b[0m;
   \x1b[38;5;141mpub\x1b[0m \x1b[38;5;141mreadonly\x1b[0m age: \x1b[38;5;109mint\x1b[0m = \x1b[38;5;217m20\x1b[0m;
