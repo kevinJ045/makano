@@ -3,6 +3,8 @@ import React from "react";
 
 
 export const Context = React.createContext<{
-  currentMode: 'home' | 'archive',
-  
+  login: {
+    username: string
+  } | null,
+  setLogin: (login: any) => void
 }>({} as any);

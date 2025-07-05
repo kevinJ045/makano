@@ -1,9 +1,11 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import MonacoEditorInstance from "./editor";
 import { Terminal } from "xterm";
 import "xterm/css/xterm.css";
 import FS from "../controllers/fs";
+import { Login } from "./login";
+import { Context } from "../context/context";
 const languages = ["coffeescript", "javascript", "cpp", "c", "python", "typescript", "java", "dart", "rust"];
 
 export function Tab({ filename, content, onChange }: { onChange: any, content?: string; filename: string }) {
@@ -97,7 +99,16 @@ type OpenFile = {
   content: string;
 };
 
-export default function Labs({ close: closeL } : { close?: () => void }) {
+export default function Labs({ close: closeL }: { close?: () => void }) {
+  const { login, setLogin } = useContext(Context);
+  return (
+    login ? <><iframe src="https://scriff.onrender.com/editor#single?" /></> : <div className="flex min-h-full justify-center items-center">
+        <Login onLogin={({username}) => setLogin({ username })} />
+    </div>
+  )
+}
+
+export function Editor({ close: closeL }: { close?: () => void }) {
   const [openFiles, setOpenFiles] = useState<OpenFile[]>([
     { filename: "/home/makano/example.js", content: FS.readFile("/home/makano/example.js") ?? "" }
   ]);
@@ -153,8 +164,8 @@ export default function Labs({ close: closeL } : { close?: () => void }) {
             key={file.filename}
             onClick={() => setActiveFile(file.filename)}
             className={`mr-2 px-3 py-1 rounded text-sm font-mono ${file.filename === activeFile
-                ? "bg-[#45475a] text-[#cdd6f4]"
-                : "bg-[#1e1e2e] text-[#6c7086] hover:bg-[#45475a]"
+              ? "bg-[#45475a] text-[#cdd6f4]"
+              : "bg-[#1e1e2e] text-[#6c7086] hover:bg-[#45475a]"
               }`}
           >
             {file.filename.split("/").pop()}

@@ -298,8 +298,8 @@ body > main > .main {
   position: relative;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
-  -webkit-animation: spin 10s infinite linear;
-          animation: spin 10s infinite linear;
+  -webkit-animation: spin3d 10s infinite linear;
+          animation: spin3d 10s infinite linear;
   -webkit-animation-play-state: paused;
           animation-play-state: paused;
 }
@@ -508,13 +508,13 @@ body > main > .main {
 }
 
 
-@-webkit-keyframes spin {
+@-webkit-keyframes spin3d {
   to {
     transform: rotateY(1turn) rotateX(0turn);
   }
 }
 
-@keyframes spin {
+@keyframes spin3d {
   to {
     transform: rotateY(1turn) rotateX(0turn);
   }
