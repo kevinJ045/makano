@@ -43,6 +43,10 @@ export function registerCommands() {
     (o: any) => o.writeLine(o.getCurrentDir(''))
   ).toString());
 
+  FS.makeFile('/bin/touch', (
+    (o: any, filepath: string) => o.FS.makeFile(o.getCurrentDir(filepath))
+  ).toString());
+
   FS.makeFile('/bin/cd', (
     (o: any, dirname = "/home/makano") => o.setCurrentDir(o.getCurrentDir(dirname))
   ).toString());
