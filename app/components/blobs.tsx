@@ -4,7 +4,7 @@ const BlobPattern = () => {
   return (
     <>
       <div
-        className="absolute w-full h-full -z-10"
+        className="fixed w-full h-full -z-10"
         style={{
           '--blob-size-1': '200px',
           '--blob-size-2': '150px',

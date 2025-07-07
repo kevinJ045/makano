@@ -1,9 +1,10 @@
 'use client';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import BlobPattern from './components/blobs';
 import MainSection from './components/sections/main-section';
 import { BackgroundBeams } from '@/components/ui/background-beams';
+import { StickyScroll } from '@/components/ui/sticky-scroll-reveal';
 import ScrollTrailSVG from './components/brush';
 import PerformanceIntensive from './components/performance';
 import CubesScene from './components/cubes';
@@ -16,8 +17,11 @@ import WindowDialog from './components/apps/dialog';
 import RecentProjects from './components/projects';
 import { Posts } from './components/apps/pages/posts';
 import dynamic from "next/dynamic";
-import BookViewer from './components/books';
+import ScriffLogo from './components/scriff-logo';
 const Labs = dynamic(() => import('./components/labs'), {
+  ssr: false,
+});
+const IovieComponent = dynamic(() => import('./components/iovie'), {
   ssr: false,
 });
 
@@ -25,7 +29,6 @@ export default function Home() {
 
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
-    // target: containerRef,
     offset: ["start start", "end start"]
   });
 
@@ -42,11 +45,13 @@ export default function Home() {
 
   return (
     <div
-      className='w-screen h-screen'
+      className='w-screen'
       ref={containerRef}>
       {/* <PerformanceIntensive minFPS={10}> */}
       <BlobPattern />
-      <BackgroundBeams />
+      <div className="-z-10 fixed w-screen h-screen">
+        <BackgroundBeams />
+      </div>
       {/* </PerformanceIntensive> */}
       {/* <ScrollTrailSVG onPointHit={() => {
       }} scrollYProgress={scrollYProgress} lineWidth={20} /> */}
@@ -55,6 +60,38 @@ export default function Home() {
         if (page == "labs") setShowLabs(true)
       }} scrollYProgress={scrollYProgress} />
       <AboutSection />
+
+      <div className='w-full min-h-screen hidden md:block'>
+        <div className="max-w-7xl mx-auto pt-20 pb-5 px-4 md:px-8 lg:px-10">
+          <h2 className="text-lg block-title md:text-4xl mb-r max-w-4xl font-bold">
+            Memories
+          </h2>
+          <p className="relative text-center text-sm md:text-base max-w-sm mx-auto mt-7">
+            A few of the things i made in the past
+          </p>
+        </div>
+          
+        
+        <StickyScroll content={
+          [
+            {
+              title: "Iovie",
+              description:
+                "IOVIE had been a simple fun project since the day i started it, it has simple characters, simple graphics, and overall simple code(probably).\nThe game is not made with any game engine but all with three.js, and with a server to enable multiplayer.\nThe game isn't done, and so far has 8 items out of the 140 i planned to add into it, and i'm slowly making up everything one by one.",
+              content: (
+                <IovieComponent />
+              ),
+            }, {
+              title: "Scriff",
+              description:
+                "Scriff - The refined terminal based webOS\nScriff, has been a passion project, connecting the aspects of a terminal, a code editor and UI to make a simple basic operating system. it's an online operating system with a simple file system, a simple code editor for js/python/shell and a simple terminal.\nYou can code anything inside it, either as an app or a plugin, and you can use it to build beautiful apps and maybe even games.",
+              content: (
+                <ScriffLogo width={'50%'} height={'100%'} />
+              ),
+            },
+          ]
+        } />
+      </div>
 
       <div className='w-full min-h-screen'>
         <div className="max-w-7xl mx-auto pt-20 pb-5 px-4 md:px-8 lg:px-10">

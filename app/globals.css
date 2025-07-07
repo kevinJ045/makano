@@ -80,31 +80,153 @@
   }
 }
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-  --sidebar-size: 225px;
+
+.cube {
+  --x: 40px;
+  --y: 40px;
+  --z: 40px;
+  --cube-color: #09D0D0;
+  --cube-sides: var(--cube-color);
+  --cube-tops: var(--cube-color);
+  --cube-side-left: var(--cube-sides);
+  --cube-side-right: var(--cube-sides);
+  --cube-side-front: var(--cube-sides);
+  --cube-side-back: var(--cube-sides);
+  --cube-side-top: var(--cube-tops);
+  --cube-side-bottom: var(--cube-tops);
+  position: relative;
+  width: var(--x);
+  height: var(--y);
+  transform-style: preserve-3d;
+  transform: rotateX(-20deg) rotateY(-40deg);
+  animation: rotateCube 5s linear infinite;
+  margin: calc(var(--y) / 2) calc(var(--x) / 2);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+.cube.mini {
+  --x: 20px;
+  --y: 20px;
+  --z: 20px;
+}
+
+.cube .cube-face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--x);
+  height: var(--y);
+  transition: background-color 500ms;
+}
+
+.cube .cube-front {
+  transform: translateZ(calc(var(--z) / 2));
+  background: var(--cube-side-front);
+}
+
+.cube .cube-back {
+  transform: rotateY(180deg) translateZ(calc(var(--z) / 2));
+  background: var(--cube-side-back);
+}
+
+.cube .cube-bottom {
+  transform: rotateX(-90deg) translateZ(calc(var(--z) / 2));
+  background: var(--cube-side-bottom);
+}
+
+.cube .cube-top {
+  transform: rotateX(90deg) translateZ(calc(var(--z) / 2));
+  background: var(--cube-side-top);
+}
+
+.cube .cube-left {
+  transform: rotateY(-90deg) translateZ(calc(var(--z) / 2));
+  background: var(--cube-side-left);
+}
+
+.cube .cube-right {
+  transform: rotateY(90deg) translateZ(calc(var(--z) / 2));
+  background: var(--cube-side-right);
+}
+
+
+.cube.gloom-jump {
+  margin-top: 400px;
+  animation: 1s infinite jumpCube;
+}
+.cube{
+	--cube-color: var(--color);
+}
+
+.cube.gloom {
+  --cube-color: radial-gradient(var(--color), var(--color-2));
+}
+
+.gloom-face {
+  --cube-side-right:
+    linear-gradient(to bottom, var(--color) 0%, var(--color) 40%, transparent 40%, transparent 80%, var(--color) 80%, var(--color) 100%),
+    linear-gradient(to right, var(--color) 0%, var(--color) 20%, white 15%, white 80%, var(--color) 80%, var(--color) 100%);
+  position: relative;
+}
+.gloom-face::before, .gloom-face::after {
+  content: "";
+  position: absolute;
+  background: black;
+  display: block;
+}
+.gloom-face::before {
+  width: 30%;
+  height: 30%;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+.gloom-face::after {
+  width: 80%;
+  height: 20%;
+  left: 50%;
+  top: 25%;
+  transform: translate(-50%, 0);
+}
+
+@keyframes jumpCube {
+  0% {
+    transform: rotateX(-20deg) rotateY(-40deg) translateY(0) scaleY(0.6) scaleX(1.4) scaleZ(1.4);
+  }
+  17% {
+    transform: rotateX(-20deg) rotateY(-40deg) translateY(0%) scaleY(1);
+  }
+  34% {
+    transform: rotateX(-20deg) rotateY(-40deg) translateY(-10%) scaleY(1.4);
+  }
+  51% {
+    transform: rotateX(-20deg) rotateY(-40deg) translateY(-400%) scaleY(1);
+  }
+  68% {
+    transform: rotateX(-20deg) rotateY(-40deg) translateY(-10%) scaleY(0.6) scaleX(1.4) scaleZ(1.4);
+  }
+  85% {
+    transform: rotateX(-20deg) rotateY(-40deg) translateY(0%) scaleY(0.6) scaleX(1.4) scaleZ(1.4);
+  }
+  100% {
+    transform: rotateX(-20deg) rotateY(-40deg) translateY(0) scaleY(0.6) scaleX(1.4) scaleZ(1.4);
   }
 }
 
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+  --sidebar-size: 225px;
+}
+
 html{
-  overflow: hidden;
   border-radius: 25px;
+  overflow-x: hidden;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: #1e1e2e;
-  overflow: auto;
-  display: flex;
 }
 
 

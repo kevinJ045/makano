@@ -48,7 +48,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
         </h2>
         <p className="relative text-center text-sm md:text-base max-w-sm mx-auto mt-7">
           A few projects that you can track or help out by joining the development in the githubs.
-          <i> PS: Some of these are actually on my wall on physical sticky notes. :)</i>
+          <i> PS: Some of these are actually on my wall on physical sticky notes(drag them for more). :)</i>
         </p>
       </div>
 

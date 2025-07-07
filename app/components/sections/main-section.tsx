@@ -1,4 +1,4 @@
-import { MotionValue, motion, useTransform } from "motion/react";
+import { MotionValue, motion, useTransform } from "framer-motion";
 import { useMemo, useRef, useState } from "react";
 import { Terminal } from "xterm";
 import { LaptopCanvas, LaptopEvents } from "../laptop";
@@ -14,6 +14,7 @@ import { CardHeader } from "@/components/ui/card";
 import SocialIcons from "../items/social-icons";
 import dynamic from "next/dynamic";
 import { useTerminalEvents } from "@/app/controllers/terminal";
+import { Cube } from "../cube";
 const XTermTerminal = dynamic(() => import('../XTermTerminal'), {
   ssr: false,
 });
@@ -39,7 +40,7 @@ export default function MainSection({ scrollYProgress, openPage = () => alert('C
       style={{ scale, y, opacity }}
       className="min-w-full min-h-screen flex flex-col md:flex-row gap-10 md:gap-0 justify-between p-3"
     >
-      <div className='w-full md:w-[40%] relative rounded-t-3xl z-10 h-auto md:h-[75dvh] pb-4 bg-[#181825] bg-opacity-70'>
+      <div className='w-full md:w-[40%] relative rounded-t-3xl z-10 h-auto md:h-[75dvh] min-h-[520px] pb-4 bg-[#181825] bg-opacity-70'>
         <div className="flex flex-col">
           <div className="flex items-center justify-center">
             <LaptopCanvas
@@ -87,7 +88,9 @@ export default function MainSection({ scrollYProgress, openPage = () => alert('C
       </div>
       <div className='w-[50%] hidden md:flex relative pr-10 pt-10 gap-5 justify-end z-10'>
         <div className="items w-[30%] flex justify-between mt-10 flex-col h-96">
-          <div className="w-24 h-24 bg-opacity-60 bg-[#181825] rounded-full"></div>
+          <div className="w-24 h-24 bg-opacity-60 bg-[#181825] rounded-full flex items-center justify-center pb-3">
+            <Cube gloom={true} size={30} color="#09D0D0"></Cube>
+          </div>
           <div className="w-24 h-24 bg-opacity-60 bg-[#181825] flex items-center justify-center -ml-12 rounded-full">
             <CryoliLogo className='w-12' />
           </div>
