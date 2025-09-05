@@ -54,6 +54,7 @@ export default function XTermTerminal({
       })
       fitAddon.fit();
 
+      console.log("init terms");
       onInit(term);
       termRef.current = term;
       fitAddonRef.current = fitAddon;

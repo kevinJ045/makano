@@ -20,7 +20,7 @@ export function Tab({ filename, content, onChange }: { onChange: any, content?: 
     if (!term.current && terminalRef.current) {
       term.current = new Terminal({ theme: { background: "#1e1e2e" } });
       term.current.open(terminalRef.current);
-      term.current.writeln(">> ready");
+      term.current?.writeln(">> ready");
     }
   }, []);
 

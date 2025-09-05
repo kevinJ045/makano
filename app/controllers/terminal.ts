@@ -33,7 +33,7 @@ export function useTerminalEvents(termRef: any) {
 
   events["terminal:write_lines"] = (lines: string[]) => {
     lines.forEach(line => {
-      termRef.current.writeln(line);
+      termRef.current?.writeln(line);
       renderedLines.current.push(line);
     });
   };
@@ -50,7 +50,7 @@ export function useTerminalEvents(termRef: any) {
     const linesToRewrite = renderedLines.current.slice(index);
 
     termRef.current.reset();
-    renderedLines.current.slice(0, index).forEach(l => termRef.current.writeln(l));
+    renderedLines.current.slice(0, index).forEach(l => termRef.current?.writeln(l));
     linesToRewrite.forEach(l => termRef.current.writeln(l));
     if (renderedInput.current) termRef.current.write(renderedInput.current);
   };
@@ -59,7 +59,7 @@ export function useTerminalEvents(termRef: any) {
     if (index < 0 || index >= renderedLines.current.length) return;
     renderedLines.current.splice(index, 1);
     termRef.current.reset();
-    renderedLines.current.forEach(l => termRef.current.writeln(l));
+    renderedLines.current.forEach(l => termRef.current?.writeln(l));
     if (renderedInput.current) termRef.current.write(renderedInput.current);
   };
 
