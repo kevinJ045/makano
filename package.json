@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "engines": {
+    "node": "22.x"
+  },
   "dependencies": {
     "@makano/rew": "^1.5.9",
     "@monaco-editor/react": "^4.7.0",
